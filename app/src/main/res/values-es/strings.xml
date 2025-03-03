@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usuario">Usuario: </string>
+    <string name="identificacion">Identificacion: </string>
+    <string name="nombre">Nombre: </string>
+    <string name="new_version_local">La version local es mas nueva</string>
+    <string name="new_version">Hay una version de la app disponible</string>
+    <string name="accept">Aceptar</string>
+    <string name="update_data">Actualizar datos</string>
+</resources>

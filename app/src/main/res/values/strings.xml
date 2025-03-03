@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Prueba tecnica - InterRapidisimo</string>
+    <string name="app_name" translatable="false">Prueba tecnica - InterRapidisimo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="usuario">User: </string>
+    <string name="identificacion">Identification: </string>
+    <string name="nombre">Name: </string>
+    <string name="new_version_local">The local version is newer</string>
+    <string name="new_version">There is a version of the app available</string>
+    <string name="accept">Accept</string>
+    <string name="update_data">Update data</string>
 </resources>
