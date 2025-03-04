@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AlertDialog
 
 fun Context.showMessageError(mss : String, action : () -> Unit){
+    //mensaje de error
     val alert = AlertDialog.Builder(this)
     alert.setTitle("Error")
     alert.setMessage(mss)

@@ -1,11 +1,13 @@
 package com.diose.pruebatecnica_interrapidisimo.view
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.transition.Visibility
 import com.diose.pruebatecnica_interrapidisimo.R
 import com.diose.pruebatecnica_interrapidisimo.databinding.ActivityMainBinding
 import com.diose.pruebatecnica_interrapidisimo.model.api.Retrofit
@@ -35,16 +37,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        //base de datos
         db = AppDatabase.getInstance(this)
-
         retrofit = Retrofit()
-        val coroutine = CoroutineScope(Dispatchers.IO)
-        coroutine.launch {
-            getVersion()
-        }
 
-        coroutine.launch {
-//            getTablas()
+        CoroutineScope(Dispatchers.IO).launch {
+            getVersion()
         }
     }
 
@@ -56,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 val userDao = db.userDao()
                 val users: List<User> = userDao.getAll()
                  try {
+                     //si la base de datos esta vacia se crea el usuario con id web solamente
                     if (users.isEmpty()){
                         val idWeb = res?.toInt()?:0
                         val user = User(
@@ -66,11 +65,13 @@ class MainActivity : AppCompatActivity() {
                             nombre = "",
                         )
                         db.userDao().insertAll(user)
-                        mainFragment()
+                        withContext(Dispatchers.Main){ mainFragment() }
                     }else{
+                        //si la base de datos no esta vacia se compara la version web con la local
                         withContext(Dispatchers.Main) {
                             val idWeb = res?.toInt() ?: 0
                             val user = users.first()
+                            //si la version web es diferente se muestra un dialogo para actualizar
                             showAlert(user.versioWeb, idWeb) {
                                 user.versioWeb = idWeb
                                 CoroutineScope(Dispatchers.IO).launch{db.userDao().update(user)}
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     }
                  }catch (_: Exception){}
             }else{
-                withContext(Dispatchers.Main){this@MainActivity.showMessageError(version.message()){} }
+                withContext(Dispatchers.Main){this@MainActivity.showMessageError(version.errorBody()?.charStream()!!.readText()){} }
             }
         }catch (e:Exception){
             withContext(Dispatchers.Main){
@@ -108,16 +109,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun mainFragment(){
+        //ocultar progress
+        binding.progress.visibility = View.GONE
+        //cambiar fragment
         val fragment = UserFragment()
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, fragment)
             .commit()
-    }
-
-    private suspend fun getTablas() {
-        val tablas = retrofit.getRetrofit().getTablas()
-        val res = tablas.body()
     }
 
 }

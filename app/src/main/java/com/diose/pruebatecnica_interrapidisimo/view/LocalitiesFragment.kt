@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.diose.pruebatecnica_interrapidisimo.databinding.FragmentLocalitiesBinding
+import com.diose.pruebatecnica_interrapidisimo.databinding.FragmentRvBinding
 import com.diose.pruebatecnica_interrapidisimo.model.api.Retrofit
 import com.diose.pruebatecnica_interrapidisimo.model.database.AppDatabase
 import com.diose.pruebatecnica_interrapidisimo.model.database.localities.Localities
@@ -16,10 +16,11 @@ import com.diose.pruebatecnica_interrapidisimo.view.adapter.RecyclerViewAdapterL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LocalitiesFragment : Fragment() {
 
-    private var _binding : FragmentLocalitiesBinding? = null
+    private var _binding : FragmentRvBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var retrofit: Retrofit
@@ -30,7 +31,7 @@ class LocalitiesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentLocalitiesBinding.inflate(inflater)
+        _binding = FragmentRvBinding.inflate(inflater)
         return binding.root
     }
 
@@ -59,23 +60,27 @@ class LocalitiesFragment : Fragment() {
     }
 
     private suspend fun getLocalidades() {
-        val localidades = retrofit.getRetrofit().getLocalidades()
-        val res = localidades.body()
-        if (localidades.isSuccessful){
+        try {
+            val localidades = retrofit.getRetrofit().getLocalidades()
+            val res = localidades.body()
+            if (localidades.isSuccessful){
 
-            val listInsert = res?.map {
-                Localities(
-                    id = it.idLocalidad!!.toInt(),
-                    abreviacionCiudad = it.abreviacionCiudad,
-                    nombreCompleto = it.nombreCompleto
-                )
+                val listInsert = res?.map {
+                    Localities(
+                        id = it.idLocalidad!!.toInt(),
+                        abreviacionCiudad = it.abreviacionCiudad,
+                        nombreCompleto = it.nombreCompleto
+                    )
+                }
+                if (listInsert != null) {
+                    db.localities().insertAll(listInsert)
+                    withContext(Dispatchers.Main){ showLocalities(listInsert) }
+                }
+            }else{
+                requireContext().showMessageError(localidades.errorBody()?.charStream()!!.readText()){}
             }
-            if (listInsert != null) {
-                db.localities().insertAll(listInsert)
-                showLocalities(listInsert)
-            }
-        }else{
-            requireContext().showMessageError(localidades.message()){}
+        }catch (e:Exception){
+            requireContext().showMessageError(e.message.toString()){this@LocalitiesFragment.requireActivity().finish()}
         }
     }
 

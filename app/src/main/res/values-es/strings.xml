@@ -12,4 +12,6 @@
     <string name="back">Atras</string>
     <string name="abbreviation">Abreviacion</string>
     <string name="name_compl">Name complete</string>
+    <string name="interrapidisimo_technical_test">Prueba técnica InterRapidisimo</string>
+    <string name="technical_test">Technical Test</string>
 </resources>

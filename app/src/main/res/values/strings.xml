@@ -14,4 +14,6 @@
     <string name="back">Back</string>
     <string name="abbreviation">Abbreviation</string>
     <string name="name_compl">Name complete</string>
+    <string name="interrapidisimo_technical_test">InterRapidisimo technical test</string>
+    <string name="technical_test">Technical Test</string>
 </resources>
