@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.diose.pruebatecnica_interrapidisimo.R
 import com.diose.pruebatecnica_interrapidisimo.databinding.FragmentMainBinding
 import com.diose.pruebatecnica_interrapidisimo.model.AuthUser
 import com.diose.pruebatecnica_interrapidisimo.model.api.Retrofit
@@ -47,6 +48,18 @@ class UserFragment : Fragment() {
         }else{
             showInfoUser(user)
         }
+
+        binding.tables.setOnClickListener {  }
+
+        binding.localities.setOnClickListener { changeFragment(LocalitiesFragment()) }
+    }
+
+    private fun changeFragment(fragment: Fragment){
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack("fragment")
+            .commit()
     }
 
     private fun showInfoUser(user: User) {
@@ -67,17 +80,21 @@ class UserFragment : Fragment() {
         )
         val userAuth = retrofit.getRetrofit().auth(userPost)
 
-        val resUser = userAuth.body()
-        if (userAuth.isSuccessful){
-            val users = db.userDao().getAll()
-            val user = users.first()
-            user.usuario = resUser?.usuario ?: ""
-            user.identificacion = resUser?.identificacion ?: ""
-            user.nombre = resUser?.nombre ?: ""
-            CoroutineScope(Dispatchers.IO).launch { db.userDao().update(user) }
-            withContext(Dispatchers.Main){ showInfoUser(user) }
-        }else{
-            requireContext().showMessageError(userAuth.message())
+        try {
+            val resUser = userAuth.body()
+            if (userAuth.isSuccessful){
+                val users = db.userDao().getAll()
+                val user = users.first()
+                user.usuario = resUser?.usuario ?: ""
+                user.identificacion = resUser?.identificacion ?: ""
+                user.nombre = resUser?.nombre ?: ""
+                CoroutineScope(Dispatchers.IO).launch { db.userDao().update(user) }
+                withContext(Dispatchers.Main){ showInfoUser(user) }
+            }else{
+                withContext(Dispatchers.Main){ requireContext().showMessageError(userAuth.message()){}}
+            }
+        }catch (e: Exception){
+            withContext(Dispatchers.Main){ requireContext().showMessageError(e.message.toString()){this@UserFragment.requireActivity().finish()}}
         }
     }
 

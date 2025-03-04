@@ -78,4 +78,23 @@
         app:layout_constraintTop_toBottomOf="@id/identificacion"
         tools:text="nombre" />
 
+    <Button
+        android:id="@+id/tables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:text="@string/tables"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/localities"
+        app:layout_constraintTop_toBottomOf="@+id/nombre" />
+
+    <Button
+        android:id="@+id/localities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/localities"
+        app:layout_constraintStart_toEndOf="@+id/tables"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tables" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

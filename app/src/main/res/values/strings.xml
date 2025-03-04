@@ -9,4 +9,9 @@
     <string name="new_version">There is a version of the app available</string>
     <string name="accept">Accept</string>
     <string name="update_data">Update data</string>
+    <string name="localities">Localities</string>
+    <string name="tables">Tables</string>
+    <string name="back">Back</string>
+    <string name="abbreviation">Abbreviation</string>
+    <string name="name_compl">Name complete</string>
 </resources>

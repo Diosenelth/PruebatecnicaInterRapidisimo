@@ -7,4 +7,9 @@
     <string name="new_version">Hay una version de la app disponible</string>
     <string name="accept">Aceptar</string>
     <string name="update_data">Actualizar datos</string>
+    <string name="localities">Localidades</string>
+    <string name="tables">Tablas</string>
+    <string name="back">Atras</string>
+    <string name="abbreviation">Abreviacion</string>
+    <string name="name_compl">Name complete</string>
 </resources>

@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class Localities(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "abreviacionCiudad") val abreviacionCiudad: String?,
-    @ColumnInfo(name = "nombre") val nombre: String?,
+    @ColumnInfo(name = "nombreCompleto") val nombreCompleto: String?,
 )

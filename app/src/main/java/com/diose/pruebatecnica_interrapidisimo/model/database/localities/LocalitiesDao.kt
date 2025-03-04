@@ -7,14 +7,14 @@ import androidx.room.Query
 
 @Dao
 interface LocalitiesDao {
-    @Query("SELECT * FROM localities limit 1")
+    @Query("SELECT * FROM localities")
     fun getAll(): List<Localities>
 
     @Query("SELECT * FROM localities WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<Localities>
 
     @Insert
-    fun insertAll(vararg localities: Localities)
+    fun insertAll(localities: List<Localities>)
 
     @Delete
     fun delete(localities: Localities)

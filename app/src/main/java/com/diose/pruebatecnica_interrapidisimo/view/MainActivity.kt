@@ -44,47 +44,48 @@ class MainActivity : AppCompatActivity() {
         }
 
         coroutine.launch {
-            getTablas()
-        }
-        coroutine.launch {
-//            getLocalidades()
+//            getTablas()
         }
     }
 
     private suspend fun getVersion() {
-        val version = retrofit.getRetrofit().getVersion()
-        val res = version.body()
-        if (version.isSuccessful){
-            val userDao = db.userDao()
-            val users: List<User> = userDao.getAll()
-             try {
-                if (users.isEmpty()){
-                    val idWeb = res?.toInt()?:0
-                    val user = User(
-                        uid = 1,
-                        usuario = "",
-                        versioWeb = idWeb,
-                        identificacion = "",
-                        nombre = "",
-                    )
-                    db.userDao().insertAll(user)
-                    mainFragment()
-                }else{
-                    withContext(Dispatchers.Main) {
-                        val idWeb = res?.toInt() ?: 0
-                        val user = users.first()
-                        showAlert(user.versioWeb, idWeb) {
-                            user.versioWeb = idWeb
-                            CoroutineScope(Dispatchers.IO).launch{db.userDao().update(user)}
-                            mainFragment()
+        try {
+            val version = retrofit.getRetrofit().getVersion()
+            val res = version.body()
+            if (version.isSuccessful){
+                val userDao = db.userDao()
+                val users: List<User> = userDao.getAll()
+                 try {
+                    if (users.isEmpty()){
+                        val idWeb = res?.toInt()?:0
+                        val user = User(
+                            uid = 1,
+                            usuario = "",
+                            versioWeb = idWeb,
+                            identificacion = "",
+                            nombre = "",
+                        )
+                        db.userDao().insertAll(user)
+                        mainFragment()
+                    }else{
+                        withContext(Dispatchers.Main) {
+                            val idWeb = res?.toInt() ?: 0
+                            val user = users.first()
+                            showAlert(user.versioWeb, idWeb) {
+                                user.versioWeb = idWeb
+                                CoroutineScope(Dispatchers.IO).launch{db.userDao().update(user)}
+                                mainFragment()
+                            }
                         }
                     }
-                }
-             }catch (_: Exception){}
-
-
-        }else{
-            this.showMessageError(version.message())
+                 }catch (_: Exception){}
+            }else{
+                withContext(Dispatchers.Main){this@MainActivity.showMessageError(version.message()){} }
+            }
+        }catch (e:Exception){
+            withContext(Dispatchers.Main){
+                this@MainActivity.showMessageError(e.message.toString()){this@MainActivity.finish()}
+            }
         }
     }
 
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         alert.setTitle(getString(R.string.update_data))
         if (idLocal > idWeb){
             alert.setMessage(getString(R.string.new_version_local))
-        }else if (idWeb > idLocal){
+        }else {
             alert.setMessage(getString(R.string.new_version))
         }
         alert.setPositiveButton(getString(R.string.accept)) { _, _ ->
@@ -118,16 +119,5 @@ class MainActivity : AppCompatActivity() {
         val tablas = retrofit.getRetrofit().getTablas()
         val res = tablas.body()
     }
-
-    private suspend fun getLocalidades() {
-        val localidades = retrofit.getRetrofit().getLocalidades()
-        val res = localidades.body()
-        if (localidades.isSuccessful){
-            println("Size :${res!!.size}")
-        }else{
-            "Error ${localidades.code()}"
-        }
-    }
-
 
 }
