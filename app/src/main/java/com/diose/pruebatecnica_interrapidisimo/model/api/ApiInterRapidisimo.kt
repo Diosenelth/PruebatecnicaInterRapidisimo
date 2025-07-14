@@ -3,6 +3,7 @@ package com.diose.pruebatecnica_interrapidisimo.model.api
 import com.diose.pruebatecnica_interrapidisimo.model.AuthUser
 import com.diose.pruebatecnica_interrapidisimo.model.ResponseAuthUser
 import com.diose.pruebatecnica_interrapidisimo.model.ResponseLocalidades
+import com.diose.pruebatecnica_interrapidisimo.model.ResponseSchemaItem
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,8 +28,11 @@ interface ApiInterRapidisimo {
     @POST("/auth")
     suspend fun auth(@Body user : AuthUser) : Response<ResponseAuthUser>
 
+    @Headers(
+        "Usuario: Controller",
+    )
     @GET("/api/schema")
-    suspend fun getTablas() : Response<String>//no esta funcionando
+    suspend fun getTablas() : Response<List<ResponseSchemaItem>>//no esta funcionando
 
     @GET("/api/localities")
     suspend fun getLocalidades() : Response<List<ResponseLocalidades>>
