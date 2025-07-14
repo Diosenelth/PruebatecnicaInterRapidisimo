@@ -12,7 +12,7 @@ import retrofit2.http.POST
 
 
 interface ApiInterRapidisimo {
-    @GET("/api/version")
+    @GET("apicontrollerpruebas/api/ParametrosFramework/ConsultarParametrosFramework/VPStoreAppControl")
     suspend fun getVersion() : Response<String>
 
     @Headers(
@@ -25,15 +25,15 @@ interface ApiInterRapidisimo {
         "IdAplicativoOrigen:9",
         "Content-Type: application/json",
     )
-    @POST("/auth")
+    @POST("FtEntregaElectronica/MultiCanales/ApiSeguridadPruebas/api/Seguridad/AuthenticaUsuarioApp")
     suspend fun auth(@Body user : AuthUser) : Response<ResponseAuthUser>
 
     @Headers(
         "Usuario: Controller",
     )
-    @GET("/api/schema")
+    @GET("apicontrollerpruebas/api/SincronizadorDatos/ObtenerEsquema/true")
     suspend fun getTablas() : Response<List<ResponseSchemaItem>>//no esta funcionando
 
-    @GET("/api/localities")
+    @GET("apicontrollerpruebas/api/ParametrosFramework/ObtenerLocalidadesRecogidas")
     suspend fun getLocalidades() : Response<List<ResponseLocalidades>>
 }
